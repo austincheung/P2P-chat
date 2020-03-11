@@ -10,63 +10,47 @@ public class client {
     private String serverHost;
     private  int serverPort;
     private Scanner userInput;
+    private boolean isOnline = false;
 
-
-    private client(String username, String host, int portNum ){
+    private client(String username, String host, int portNum, boolean online ){
         this.username = username;
         this.serverHost = host;
         this.serverPort = portNum;
+        this.isOnline=online;
     }
 
     public static void main(String[] args) throws IOException {
-        /*String name= null;
-        Scanner scanner= new Scanner(System.in);
+        String name = null;
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter name");
-        while(name == null || !(name.equals("")) ){
+        while(name == null || name.trim().equals("")){
+            // null, empty, whitespace(s) not allowed.
             name = scanner.nextLine();
-            if(name.equals("")){
-                System.out.println("Invalid Name Please enter in something");
+            if(name.trim().equals("")){
+                System.out.println("Invalid. Please enter again:");
             }
         }
-        client client = new client(name, SERVER_IP,SERVER_PORT);
+        client client = new client(name, SERVER_IP, SERVER_PORT,false);
         client.startClient(scanner);
-        */
-        Socket socket = new Socket(SERVER_IP, SERVER_PORT);
-
-
-        BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
-        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-
-        System.out.println("Please enter name");
-        String client_name =keyboard.readLine();
-        System.out.println("Welcome " + client_name);
-
-        Serverconnection serverConn = new Serverconnection(socket);
-        new Thread(serverConn).start();
-        System.out.println(client_name + " is now offline");
-        while(true) {
-            System.out.print("> ");
-            String command = keyboard.readLine();
-
-            if(command.equals("quit")) break;
-            out.println(command + "\n");
-        }
-        socket.close();
-        System.exit(0);
     }
 
-    /*private void startClient(Scanner scan) throws IOException {
-        Socket socket = new Socket(SERVER_IP, SERVER_PORT);
-        Serverconnection serverConn = new Serverconnection(socket);
-        new Thread(serverConn).start();
-        while(true) {
-            if(scan.equals("quit")) {
-            break;}
+    private void startClient(Scanner scan) throws IOException {
+        try {
+            Socket socket = new Socket(SERVER_IP, SERVER_PORT);
+            serverConn serverThread = new serverConn(socket, username);
+            Thread serverAccessThread = new Thread(serverThread);
+            serverAccessThread.start();
+            while (serverAccessThread.isAlive()) {
+                if(scan.hasNextLine()){
+                    serverThread.addNextMessage(scan.nextLine());
+                }
+            }
+        } catch (IOException ex) {
+            System.err.println("Fatal Connection error!");
+            ex.printStackTrace();
         }
-        socket.close();
-        System.exit(0);
-    }*/
-
-
-
+    }
 }
+
+
+

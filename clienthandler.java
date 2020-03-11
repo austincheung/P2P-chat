@@ -4,47 +4,48 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class clienthandler implements Runnable {
-    private Socket client;
-    private BufferedReader in;
-    private PrintWriter out;
-    private ArrayList<clienthandler> clients;
 
-    public clienthandler(Socket clientSocket, ArrayList<clienthandler> clients) throws IOException {
-    this.client = clientSocket;
-    this.clients = clients;
-    in = new BufferedReader(new InputStreamReader((client.getInputStream())));
-    out = new PrintWriter(client.getOutputStream(), true);
+    private Socket socket;
+    private PrintWriter clientOut;
+    private server server;
+
+    public clienthandler(server server, Socket socket){
+        this.server = server;
+        this.socket = socket;
+    }
+
+    private PrintWriter getWriter(){
+        return clientOut;
     }
 
     @Override
     public void run() {
-        try {
-            while (true) {
-                String request = in.readLine();
+        try{
+            // setup
+            this.clientOut = new PrintWriter(socket.getOutputStream(), false);
 
-                if(request.equals("quit")) break;
+            Scanner in = new Scanner(socket.getInputStream());
+
+            // start communicating
+            while(!socket.isClosed()){
+                if(in.hasNextLine()){
+                    String input = in.nextLine();
+                    // NOTE: if you want to check server can read input, uncomment next line and check server file console.
+                    // System.out.println(input);
+                    for(clienthandler thatClient : server.getClients()){
+                        PrintWriter thatClientOut = thatClient.getWriter();
+                        if(thatClientOut != null){
+                            thatClientOut.write(input + "\r\n");
+                            thatClientOut.flush();
+                        }
+                    }
+                }
             }
         } catch (IOException e) {
-            System.err.println("IO Exception in client handler");
-            System.err.println(e.getStackTrace());
-        }finally{
-            try {
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            }
-
+            e.printStackTrace();
         }
-
-
-    private void outToAll(String msg){
-    for(clienthandler  aClient : clients){
-    aClient.out.println(msg);
-    }
     }
 }
