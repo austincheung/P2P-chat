@@ -63,6 +63,7 @@ public class server {
         public String hostname;
         public String ip;
         public int portnum;
+
         public userProfile(String username, String hostname, String ip, int portnum){
             this.username= username;
             this.hostname=hostname;

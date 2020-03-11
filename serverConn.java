@@ -8,14 +8,12 @@ public class serverConn implements Runnable {
     private String name;
     private ArrayList<String> messagesToSend;
     private boolean hasMessages = false;
-    private List<server.userProfile> users;
 
 
-    public serverConn(Socket socket, String user, List<server.userProfile> list){
+    public serverConn(Socket socket, String user){
         this.socket = socket;
         this.name=user;
         messagesToSend = new ArrayList<String>();
-        this.users=list;
     }
 
     public void addNextMessage(String message){
@@ -25,7 +23,7 @@ public class serverConn implements Runnable {
     private boolean offline = true;
     private boolean join = false;
     private boolean exit = false;
-    public void run(){
+    public synchronized void run(){
         System.out.println("Welcome " + name);
         System.out.println("The Port You are on is :" + socket.getLocalPort());
         System.out.println("Server = " + socket.getRemoteSocketAddress() + ":" + socket.getPort());
@@ -44,28 +42,30 @@ public class serverConn implements Runnable {
                     case "commands": System.out.println("The list of commands are \nOnline: This will toggle your status from being offline to online. \nOffline: This will toggle your status from being online to offline.\n...");
                     break;
                     case "online":
-                        offline=false;
-                        System.out.println("You are now ONLINE");
-                        users.add(new server.userProfile(name,"Person" + socket.getLocalPort(),""+socket.getRemoteSocketAddress(), socket.getPort() ));
+                            offline = false;
+                            System.out.println("You are now ONLINE");
+                        server.onlineUsers.add(new server.userProfile(name, "Person" + socket.getLocalPort(), "" + socket.getRemoteSocketAddress(), socket.getPort()));
+
                     //System.out.println(onlineUsers.get(0).username);
                     break;
                     case "offline": offline=true;
-                    System.out.println("You are now OFFLINE");
-                    if(!users.isEmpty()) {
-                        for (int i = 0; i < users.size(); i++) {
-                            if (users.get(i).username.equals(name)) {
-                                users.remove(i);
+                        System.out.println("You are now OFFLINE");
+                        if (!server.onlineUsers.isEmpty()) {
+                            for (int i = 0; i < server.onlineUsers.size(); i++) {
+                                if (server.onlineUsers.get(i).username.equals(name)) {
+                                    server.onlineUsers.remove(i);
+                                }
                             }
                         }
-                    }
+
                     break;
                     case "query":
-                        if(users.isEmpty()){
+                        if(server.onlineUsers.isEmpty()){
                             System.out.println("There are no Users online :(");
                         }
                         else{
                             for(int i=0; i< server.onlineUsers.size();i++){
-                                System.out.println(users.get(i).toString());
+                                System.out.println(server.onlineUsers.get(i).toString());
                             }
                         }
                     case "join":join = true; break;
