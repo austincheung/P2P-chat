@@ -1,3 +1,4 @@
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,8 +16,9 @@ public class server {
 
     public static void main(String[] args) throws IOException{
         ServerSocket listener = new ServerSocket(PORT);
+        System.out.println("[SERVER} waiting for client connection...");
+
         while(true) {
-            System.out.println("[SERVER} waiting for client connection...");
             Socket client = listener.accept();
             System.out.println("[SERVER] Connected to client");
             clienthandler clientThread = new clienthandler(client, clients);

@@ -20,14 +20,13 @@ public class client {
 
         Serverconnection serverConn = new Serverconnection(socket);
         new Thread(serverConn).start();
-
+        System.out.println(client_name + " is now offline");
         while(true) {
-            System.out.println("> ");
+            System.out.print("> ");
             String command = keyboard.readLine();
 
             if(command.equals("quit")) break;
-            System.out.println(client_name + " is now offline");
-            out.println(command);
+            out.println(command + "\n");
         }
         socket.close();
         System.exit(0);
