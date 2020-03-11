@@ -71,23 +71,6 @@ public class server {
             this.portnum = portnum;
         }
     }
-    /*private static ArrayList<clienthandler> clients = new ArrayList<>();
-    private static ExecutorService pool = Executors.newFixedThreadPool(4);
 
-    public static void main(String[] args) throws IOException{
-        ServerSocket listener = new ServerSocket(PORT);
-        System.out.println("[SERVER} waiting for client connection...");
-
-        while(true) {
-            Socket client = listener.accept();
-            System.out.println("[SERVER] Connected to client");
-            clienthandler clientThread = new clienthandler(client, clients);
-            clients.add(clientThread);
-            for (int i=0; i < clients.size();i++){
-                System.out.println(clients.get(i));
-            }
-            pool.execute(clientThread);
-        }
-    }*/
 }
 
