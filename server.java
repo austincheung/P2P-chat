@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,6 +22,9 @@ public class server {
     public static void main(String[] args){
         server server = new server(PORT);
         server.startServer();
+    if(!onlineUsers.isEmpty()){
+        System.out.println("hi");
+    }
     }
 
     private void startServer(){
@@ -49,6 +54,20 @@ public class server {
             } catch (IOException ex) {
                 System.out.println("Accept failed on : " + serverPort);
             }
+        }
+    }
+    public static List<userProfile> onlineUsers = Collections.synchronizedList(new ArrayList<userProfile>());
+
+    public static  class userProfile{
+        public String username;
+        public String hostname;
+        public String ip;
+        public int portnum;
+        public userProfile(String username, String hostname, String ip, int portnum){
+            this.username= username;
+            this.hostname=hostname;
+            this.ip=ip;
+            this.portnum = portnum;
         }
     }
     /*private static ArrayList<clienthandler> clients = new ArrayList<>();

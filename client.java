@@ -37,7 +37,7 @@ public class client {
     private void startClient(Scanner scan) throws IOException {
         try {
             Socket socket = new Socket(SERVER_IP, SERVER_PORT);
-            serverConn serverThread = new serverConn(socket, username);
+            serverConn serverThread = new serverConn(socket, username, server.onlineUsers);
             Thread serverAccessThread = new Thread(serverThread);
             serverAccessThread.start();
             while (serverAccessThread.isAlive()) {
