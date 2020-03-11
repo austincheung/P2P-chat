@@ -23,12 +23,8 @@ public class clienthandler implements Runnable {
         try {
             while (true) {
                 String request = in.readLine();
-                if(request.startsWith("say")){
-                    int firstSpace = request.indexOf(" ");
-                    if(firstSpace != -1) {
-                        outToAll(request.substring(firstSpace+1));
-                    }
-                }
+
+                if(request.equals("quit")) break;
             }
         } catch (IOException e) {
             System.err.println("IO Exception in client handler");
@@ -39,7 +35,8 @@ public class clienthandler implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            out.close();
+
+
             }
 
         }

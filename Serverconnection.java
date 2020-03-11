@@ -14,13 +14,13 @@ public class Serverconnection implements Runnable {
 
 
     public Serverconnection(Socket s) throws IOException {
-        server = s;
+        this.server = s;
         in = new BufferedReader(new InputStreamReader(server.getInputStream()));
+
     }
 
     @Override
     public void run() {
-
         try {
             while (true) {
                 String serverResponse = in.readLine();

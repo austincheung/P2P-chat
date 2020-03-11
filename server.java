@@ -23,7 +23,9 @@ public class server {
             System.out.println("[SERVER] Connected to client");
             clienthandler clientThread = new clienthandler(client, clients);
             clients.add(clientThread);
-
+            for (int i=0; i < clients.size();i++){
+                System.out.println(clients.get(i));
+            }
             pool.execute(clientThread);
         }
 
