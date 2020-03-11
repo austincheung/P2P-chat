@@ -1,25 +1,20 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Serverconnection implements Runnable {
 
     private Socket server;
     private BufferedReader in;
-    private String [] names;
 
 
 
-    public Serverconnection(Socket s, String  name) throws IOException {
+
+    public Serverconnection(Socket s) throws IOException {
         server = s;
-        for(int i=0; i< 4; i++) {
-            if(names[i] == null) {
-                names[i] = name;
-                break;
-            }
-        }
-
         in = new BufferedReader(new InputStreamReader(server.getInputStream()));
     }
 
@@ -30,7 +25,7 @@ public class Serverconnection implements Runnable {
             while (true) {
                 String serverResponse = in.readLine();
                 if(serverResponse == null) break;
-                System.out.println(names + ": " + serverResponse);
+                System.out.println("Server says: " + serverResponse);
             }
         } catch (IOException e) {
             e.printStackTrace();

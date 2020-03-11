@@ -13,23 +13,20 @@ public class client {
 
         BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+
         System.out.println("Please enter name");
         String client_name =keyboard.readLine();
-        for(int i=0; i< 4; i++) {
-            if(server.names[i].isEmpty()) {
-                server.names[i] = client_name;
-                Serverconnection serverConn = new Serverconnection(socket, server.names[i]);
-                new Thread(serverConn).start();
-                break;
-            }
-        }
+        System.out.println("Welcome " + client_name);
+
+        Serverconnection serverConn = new Serverconnection(socket);
+        new Thread(serverConn).start();
 
         while(true) {
             System.out.println("> ");
             String command = keyboard.readLine();
 
             if(command.equals("quit")) break;
-            out.println(client_name + " is now offline");
+            System.out.println(client_name + " is now offline");
             out.println(command);
         }
         socket.close();

@@ -28,9 +28,6 @@ public class clienthandler implements Runnable {
                     if(firstSpace != -1) {
                         outToAll(request.substring(firstSpace+1));
                     }
-                }else
-                {
-                    out.println("not a command");
                 }
             }
         } catch (IOException e) {

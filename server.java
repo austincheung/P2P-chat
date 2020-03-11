@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 
 public class server {
 
-    public static String[] names;
+    //public static String[] names;
     private static final int PORT=9090;
 
     private static ArrayList<clienthandler> clients = new ArrayList<>();
